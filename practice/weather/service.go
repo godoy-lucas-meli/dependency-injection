@@ -8,25 +8,27 @@ import (
 
 const ttl = 30
 
-type FService struct {
+type service struct {
 	weatherProvider WeatherProvider
 }
 
-// NewForecastService creates new weather service instance
-func NewForecastService(weatherProvider WeatherProvider) (*FService, error) {
-	return &FService{weatherProvider: weatherProvider}, nil
+// NewWeatherService creates new weather service instance
+func NewWeatherService(weatherProvider WeatherProvider) (*service, error) {
+	return &service{weatherProvider: weatherProvider}, nil
 }
 
 // Get gets forecast based on configured weather provider
-func (ws *FService) Get(country, state, city string, forecastDays uint) (*entities.Forecast, error) {
+func (s *service) Get(country, state, city string, forecastDays uint) (*entities.Forecast, error) {
 	logrus.Info("fetching forecast from weather provider")
+
 	client := internal.NewHttpClient(ttl)
-	forecastData, err := ws.weatherProvider.GetForecastData(country, state, city, forecastDays, client)
+
+	forecastData, err := s.weatherProvider.GetForecastData(country, state, city, forecastDays, client)
 	if err != nil {
 		return nil, err
 	}
 
-	forecast, err := ws.weatherProvider.Adapt()(forecastData)
+	forecast, err := s.weatherProvider.Adapt()(forecastData)
 	if err != nil {
 		return nil, err
 	}

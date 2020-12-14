@@ -59,14 +59,14 @@ func loadDependencies() http.Handler {
 		panic(err)
 	}
 
-	fService, err := weather.NewForecastService(wProvider)
+	weatherService, err := weather.NewWeatherService(wProvider)
 	if err != nil {
 		panic(err)
 	}
 
-	bfCalculator := business.NewBeerForecast(fService)
+	beerPacksEstimator := business.NewBeerPacksEstimator(weatherService)
 
-	bfResolver := handlers.NewBeerForecastResolver(bfCalculator)
+	controller := handlers.NewBeerPacksController(beerPacksEstimator)
 
-	return NewRouter(bfResolver)
+	return NewRouter(controller)
 }

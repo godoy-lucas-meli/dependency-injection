@@ -8,14 +8,14 @@ import (
 	"mercadolibre.com/di/practice/entities"
 )
 
-type beerForecastFetcher interface {
+type bpfHandler interface {
 	Do(w io.Writer, r *http.Request) (*entities.HandlerResult, error)
 }
 
-func NewRouter(bff beerForecastFetcher) http.Handler {
+func NewRouter(handler bpfHandler) http.Handler {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/beer-forecast", middleware(bff.Do)).Methods(http.MethodGet)
+	router.HandleFunc("/beer-forecast", middleware(handler.Do)).Methods(http.MethodGet)
 
 	return router
 }
