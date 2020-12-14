@@ -12,19 +12,19 @@ import (
 	"mercadolibre.com/di/practice/entities"
 )
 
-type beerForecastCalculator interface {
-	Get(rp *entities.RequestParams) ([]*entities.BeerForecast, error)
+type beerPacksEstimator interface {
+	Estimate(rp *entities.RequestParams) ([]*entities.BeerPacksForecastEstimation, error)
 }
 
-type BeerForecastFetcher struct {
-	bfCalculator beerForecastCalculator
+type handler struct {
+	bf beerPacksEstimator
 }
 
-func NewBeerForecastResolver(bfCalculator beerForecastCalculator) *BeerForecastFetcher {
-	return &BeerForecastFetcher{bfCalculator: bfCalculator}
+func NewBeerPacksController(bf beerPacksEstimator) *handler {
+	return &handler{bf: bf}
 }
 
-func (bp *BeerForecastFetcher) Do(w io.Writer, r *http.Request) (*entities.HandlerResult, error) {
+func (h *handler) Do(w io.Writer, r *http.Request) (*entities.HandlerResult, error) {
 	queries := r.URL.Query()
 
 	rp, err := getValuesFromVars(queries)
@@ -32,14 +32,14 @@ func (bp *BeerForecastFetcher) Do(w io.Writer, r *http.Request) (*entities.Handl
 		return nil, err
 	}
 
-	forecastBeerData, err := bp.bfCalculator.Get(rp)
+	beerPacksEstimation, err := h.bf.Estimate(rp)
 	if err != nil {
 		return nil, err
 	}
 
 	return &entities.HandlerResult{
 		Status: http.StatusOK,
-		Body:   forecastBeerData,
+		Body:   beerPacksEstimation,
 	}, nil
 }
 

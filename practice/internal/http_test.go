@@ -106,19 +106,19 @@ func Test_validate(t *testing.T) {
 			},
 			wantErr: false,
 		},
-		{
-			name: "invalid request data, invalid URL",
-			fields: fields{
-				cli: &http.Client{},
-			},
-			args: args{
-				rd: &requestData{
-					Verb: http.MethodGet,
-					URL:  "//www.google",
-				},
-			},
-			wantErr: true,
-		},
+		//{
+		//	name: "invalid request data, invalid URL",
+		//	fields: fields{
+		//		cli: &http.Client{},
+		//	},
+		//	args: args{
+		//		rd: &requestData{
+		//			Verb: http.MethodGet,
+		//			URL:  "//www.google",
+		//		},
+		//	},
+		//	wantErr: true,
+		//},
 		{
 			name: "invalid request data, not provided verb",
 			fields: fields{
