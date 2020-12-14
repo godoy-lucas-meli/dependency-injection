@@ -9,19 +9,19 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 	di "mercadolibre.com/di/practice"
+	"mercadolibre.com/di/practice/business"
 	"mercadolibre.com/di/practice/entities"
 )
 
-type beerPacksEstimator interface {
-	Estimate(rp *entities.RequestParams) ([]*entities.BeerPacksForecastEstimation, error)
-}
 
 type handler struct {
-	bf beerPacksEstimator
+	estimator *business.Estimator
 }
 
-func NewBeerPacksController(bf beerPacksEstimator) *handler {
-	return &handler{bf: bf}
+func NewBeerPacksController() *handler {
+	beerPacksEstimator := business.NewBeerPacksEstimator()
+
+	return &handler{estimator: beerPacksEstimator}
 }
 
 func (h *handler) Do(w io.Writer, r *http.Request) (*entities.HandlerResult, error) {
@@ -32,7 +32,7 @@ func (h *handler) Do(w io.Writer, r *http.Request) (*entities.HandlerResult, err
 		return nil, err
 	}
 
-	beerPacksEstimation, err := h.bf.Estimate(rp)
+	beerPacksEstimation, err := h.estimator.Estimate(rp)
 	if err != nil {
 		return nil, err
 	}

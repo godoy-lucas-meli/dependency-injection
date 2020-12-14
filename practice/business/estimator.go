@@ -3,21 +3,23 @@ package business
 import (
 	"github.com/sirupsen/logrus"
 	"mercadolibre.com/di/practice/entities"
+	"mercadolibre.com/di/practice/weather"
 )
 
-type weatherFetcher interface {
-	Get(country, state, city string, forecastDays uint) (*entities.Forecast, error)
+type Estimator struct {
+	wService *weather.Service
 }
 
-type estimator struct {
-	wFetcher weatherFetcher
+func NewBeerPacksEstimator() *Estimator {
+	weatherService, err := weather.NewWeatherService()
+	if err != nil {
+		panic(err)
+	}
+
+	return &Estimator{wService: weatherService}
 }
 
-func NewBeerPacksEstimator(wf weatherFetcher) *estimator {
-	return &estimator{wFetcher: wf}
-}
-
-func (e *estimator) Estimate(rp *entities.RequestParams) ([]*entities.BeerPacksForecastEstimation, error) {
+func (e *Estimator) Estimate(rp *entities.RequestParams) ([]*entities.BeerPacksForecastEstimation, error) {
 	forecast, err := e.getForecast(rp.Country, rp.State, rp.City, rp.ForecastDays)
 	if err != nil {
 		return nil, err
@@ -30,8 +32,9 @@ func (e *estimator) Estimate(rp *entities.RequestParams) ([]*entities.BeerPacksF
 			return nil, err
 		}
 
+		ts := timestamp
 		results = append(results, &entities.BeerPacksForecastEstimation{
-			Timestamp: &timestamp,
+			Timestamp: &ts,
 			BeerPacks: &qty,
 			Forecast: &entities.DailyForecast{
 				MinTemp: df.MinTemp,
@@ -43,8 +46,8 @@ func (e *estimator) Estimate(rp *entities.RequestParams) ([]*entities.BeerPacksF
 	return results, nil
 }
 
-func (e *estimator) getForecast(country, city, state string, forecastDays uint) (*entities.Forecast, error) {
-	forecast, err := e.wFetcher.Get(country, state, city, forecastDays)
+func (e *Estimator) getForecast(country, city, state string, forecastDays uint) (*entities.Forecast, error) {
+	forecast, err := e.wService.Get(country, state, city, forecastDays)
 	if err != nil {
 		return nil, err
 	}

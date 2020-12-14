@@ -8,17 +8,24 @@ import (
 
 const ttl = 30
 
-type service struct {
+var weatherProvider = internal.GetEnv("WEATHER_PROVIDER", "weather-bit")
+
+type Service struct {
 	weatherProvider WeatherProvider
 }
 
-// NewWeatherService creates new weather service instance
-func NewWeatherService(weatherProvider WeatherProvider) (*service, error) {
-	return &service{weatherProvider: weatherProvider}, nil
+// NewWeatherService creates new weather Service instance
+func NewWeatherService() (*Service, error) {
+	wProvider, err := GetProvider(weatherProvider)
+	if err != nil {
+		panic(err)
+	}
+
+	return &Service{weatherProvider: wProvider}, nil
 }
 
 // Get gets forecast based on configured weather provider
-func (s *service) Get(country, state, city string, forecastDays uint) (*entities.Forecast, error) {
+func (s *Service) Get(country, state, city string, forecastDays uint) (*entities.Forecast, error) {
 	logrus.Info("fetching forecast from weather provider")
 
 	client := internal.NewHttpClient(ttl)

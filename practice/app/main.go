@@ -10,15 +10,12 @@ import (
 	"syscall"
 	"time"
 
-	"mercadolibre.com/di/practice/business"
 	"mercadolibre.com/di/practice/handlers"
 	"mercadolibre.com/di/practice/internal"
-	"mercadolibre.com/di/practice/weather"
 )
 
 var (
 	port            = internal.GetEnv("PORT", "3001")
-	weatherProvider = internal.GetEnv("WEATHER_PROVIDER", "weather-bit")
 )
 
 func main() {
@@ -54,19 +51,7 @@ func main() {
 }
 
 func loadDependencies() http.Handler {
-	wProvider, err := weather.GetProvider(weatherProvider)
-	if err != nil {
-		panic(err)
-	}
-
-	weatherService, err := weather.NewWeatherService(wProvider)
-	if err != nil {
-		panic(err)
-	}
-
-	beerPacksEstimator := business.NewBeerPacksEstimator(weatherService)
-
-	controller := handlers.NewBeerPacksController(beerPacksEstimator)
+	controller := handlers.NewBeerPacksController()
 
 	return NewRouter(controller)
 }
