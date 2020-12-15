@@ -30,8 +30,9 @@ func (e *estimator) Estimate(rp *entities.RequestParams) ([]*entities.BeerPacksF
 			return nil, err
 		}
 
+		ts := timestamp
 		results = append(results, &entities.BeerPacksForecastEstimation{
-			Timestamp: &timestamp,
+			Timestamp: &ts,
 			BeerPacks: &qty,
 			Forecast: &entities.DailyForecast{
 				MinTemp: df.MinTemp,

@@ -25,9 +25,9 @@ func beerPacksQuantity(attendees, unitsPerPack uint, temperature float64) (float
 
 func getMultiplier(temperature float64) float64 {
 	if temperature >= 20 && temperature <= 24 {
-		return 1
+		return 2
 	} else if temperature < 20 {
-		return 0.75
+		return 1
 	}
 	return 3
 }
