@@ -5,6 +5,7 @@ import (
 	"mercadolibre.com/di/practice/entities"
 )
 
+//go:generate mockgen -source=./estimator.go -destination=./mocks/estimator_mock.go -package=mocks
 type weatherFetcher interface {
 	Get(country, state, city string, forecastDays uint) (*entities.Forecast, error)
 }
