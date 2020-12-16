@@ -3,6 +3,7 @@ module mercadolibre.com/di
 go 1.15
 
 require (
+	github.com/golang/mock v1.4.4
 	github.com/gorilla/mux v1.8.0
 	github.com/mercadolibre/go-meli-toolkit v0.0.0-20201110145156-c3fc6612427d
 	github.com/mitchellh/mapstructure v1.4.0
