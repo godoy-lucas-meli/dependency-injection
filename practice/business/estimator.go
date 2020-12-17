@@ -1,6 +1,9 @@
 package business
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/sirupsen/logrus"
 	"mercadolibre.com/di/practice/entities"
 	"mercadolibre.com/di/practice/weather"
@@ -34,9 +37,9 @@ func (e *Estimator) Estimate(rp *entities.RequestParams) ([]*entities.BeerPacksF
 
 		ts := timestamp
 		results = append(results, &entities.BeerPacksForecastEstimation{
-			Timestamp: &ts,
-			BeerPacks: &qty,
-			Forecast: &entities.DailyForecast{
+			Date:      toDate(ts),
+			BeerPacks: qty,
+			Forecast: entities.DailyForecast{
 				MinTemp: df.MinTemp,
 				MaxTemp: df.MaxTemp,
 			},
@@ -54,4 +57,10 @@ func (e *Estimator) getForecast(country, city, state string, forecastDays uint) 
 
 	logrus.Infof("forecast values for %v, %v, %v are: %v", country, state, city, forecast)
 	return forecast, nil
+}
+
+func toDate(timestamp int64) string {
+	ts := timestamp
+	t := time.Unix(ts, 0)
+	return fmt.Sprintf("%v-%v-%v", t.Day(), t.Month(), t.Year())
 }
