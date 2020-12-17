@@ -37,16 +37,16 @@ func TestEstimator_Estimate(t *testing.T) {
 
 	expected := []*entities.BeerPacksForecastEstimation{
 		{
-			Timestamp: int64Pointer(1608595200),
-			BeerPacks: float64Pointer(1),
+			Timestamp: 1608595200,
+			BeerPacks: 1,
 			Forecast: &entities.DailyForecast{
 				MinTemp: 10,
 				MaxTemp: 19,
 			},
 		},
 		{
-			Timestamp: int64Pointer(1608681600),
-			BeerPacks: float64Pointer(3),
+			Timestamp: 1608681600,
+			BeerPacks: 3,
 			Forecast: &entities.DailyForecast{
 				MinTemp: 10,
 				MaxTemp: 39,
@@ -114,16 +114,16 @@ func TestEstimator_Estimate_GoMock(t *testing.T) {
 
 	expected := []*entities.BeerPacksForecastEstimation{
 		{
-			Timestamp: int64Pointer(1608595200),
-			BeerPacks: float64Pointer(1),
+			Timestamp: 1608595200,
+			BeerPacks: 1,
 			Forecast: &entities.DailyForecast{
 				MinTemp: 10,
 				MaxTemp: 19,
 			},
 		},
 		{
-			Timestamp: int64Pointer(1608681600),
-			BeerPacks: float64Pointer(3),
+			Timestamp: 1608681600,
+			BeerPacks: 3,
 			Forecast: &entities.DailyForecast{
 				MinTemp: 10,
 				MaxTemp: 39,
@@ -168,12 +168,4 @@ func TestEstimator_Estimate_ErrorFetchingWeather_GoMock(t *testing.T) {
 
 	assert.Nil(t, estimate)
 	assert.NotNil(t, err)
-}
-
-func float64Pointer(n float64) *float64 {
-	return &n
-}
-
-func int64Pointer(n int64) *int64 {
-	return &n
 }
