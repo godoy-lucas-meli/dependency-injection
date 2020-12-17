@@ -10,9 +10,9 @@ type DailyForecast struct {
 }
 
 type BeerPacksForecastEstimation struct {
-	Date      string        `json:"timestamp,omitempty"`
-	BeerPacks float64       `json:"beer_packs,omitempty"`
-	Forecast  DailyForecast `json:"forecast,omitempty"`
+	Timestamp *int64         `json:"timestamp,omitempty"`
+	BeerPacks *float64       `json:"beer_packs,omitempty"`
+	Forecast  *DailyForecast `json:"forecast,omitempty"`
 }
 
 type HandlerResult struct {
